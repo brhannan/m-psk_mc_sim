@@ -4,11 +4,12 @@ function main()
 	% Run Monte Carlo simulation to estimate symbol error probability.
 	% Plot the results.
 
-	% Calculate error probability from exact formula. Get bounds.
-	% Saves results to file.
-	mpsk_prob_err_exact();
-	% Run MC simulation. Results saved to file.
-	mcsim_mpsk();
-	% Load, plot the results.
-	plot_mpsk_data();
+	N0 = 1;
+	mpskMvals = [2 4 8 16]; % M values for the M-PSK system.
+	ebn0 = [1:0.5:10] / N0; % Eb/N0 values.
+
+	MpskExact = mpsk_prob_err_exact(ebn0, mpskMvals, N0);
+	MC = mcsim_mpsk(ebn0, mpskMvals, N0);
+	save('mpsk_data.mat');
+	plot_mpsk_data(); % Load, plot the results.
 end

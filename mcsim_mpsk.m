@@ -13,8 +13,8 @@ function MpskMcStruct = mcsim_mpsk(varargin)
 	% Set the value of the optional input, symbolErrThresh.
 	numVarArgs = length(varargin);
 	if numVarArgs > 1
-	    error(  'myfuns:mcsim_mpsk:TooManyInputs'    ,   ...
-	            'This function takes at most 1 optional input.');
+	    error('myfuns:mcsim_mpsk:TooManyInputs', ...
+	        'This function takes at most 1 optional input.');
 	end
 	optArgs = {100};
 	optArgs(1:numVarArgs) = varargin;

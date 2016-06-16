@@ -1,22 +1,17 @@
-function mpsk_prob_err_exact()
+function MpskExactStruct = mpsk_prob_err_exact(bitEnergyArray, M_array, N0)
 	% MPSK_PROB_ERR_EXACT Evaluate the exact formula for M-PSK error probability 
 	% and get upper/lower bounds for multiple values of M.
-
-	N0 = 1; % N0=1 is included in the calculations below for completeness.
-	eb_over_n0 = [1:0.5:10] / N0;
-	M_array = [2 4 8 16];
-
 	MpskExactStruct = struct();
-	MpskExactStruct.bitEnergyVals = eb_over_n0;
+	MpskExactStruct.bitEnergyVals = bitEnergyArray;
 	for k = 1:numel(M_array)
 		M_now = M_array(k);
 		MpskExactStruct.(sprintf('M%d',M_now)).errProb = gen_err_prob_curve(...
-			eb_over_n0, M_now, N0);
-		[upBound, lowBound] = calculate_bounds_m(eb_over_n0, M_now);
+			bitEnergyArray, M_now, N0);
+		[upBound, lowBound] = calculate_bounds_m(bitEnergyArray, M_now);
 		MpskExactStruct.(sprintf('M%d',M_now)).ub = upBound;
 		MpskExactStruct.(sprintf('M%d',M_now)).lb = lowBound;
 	end
-	save('mpsk_exact_bounds.mat');
+	% save('mpsk_exact_bounds.mat');
 end % main
 
 
@@ -52,7 +47,6 @@ function pm = calculate_err_prob(z, mVal, N0)
 	else 						% avoid the "singularity problem".
 		yMaxFcn = @(x) x * tan(pi/mVal);
 	end
-
 	intgdFcn = @(x, y) (2/(pi*N0^2)) * ...
 		exp( -log2(mVal)*z + (2*x*sqrt(log2(mVal)/N0))*sqrt(z) - x.^2/N0 ) .* ... 
 		exp(- y.^2 / N0);
@@ -65,16 +59,14 @@ function [lbArray, ubArray] = calculate_bounds_m(snrArray, mVal)
 	% Calculate upper and lower bounds on P_M for a M-PSK system.
 	% Inputs:
 	%	snrArray 	An array of Eb/N0 values.
-	%	mVal		The M value for the M-PSK system.
+	%	mVal		The M value of the M-PSK system.
 	% Outputs:
 	%	lbArray		Array of LB values.
 	% 	ubArray		Array of UB values.
-
 	assert(size(snrArray,1) == 1, 'Eb/N0 array must be a row vector.');
-	% z is Eb/N0.
 	myQfun = @(x) 0.5 * erfc(x/sqrt(2)); % Define the Q function.
-	lbFun = @(z,mVal) myQfun(sqrt(2 * z * log2(mVal) * (sin(pi/mVal))^2));
-	ubFun = @(z,mVal) 2 * myQfun(sqrt(2 * z * log2(mVal) * (sin(pi/mVal))^2));
+	lbFun = @(z,mVal) myQfun(sqrt( 2 * z * log2(mVal) * (sin(pi/mVal))^2 ));
+	ubFun = @(z,mVal) 2 * myQfun(sqrt( 2 * z * log2(mVal) * (sin(pi/mVal))^2 ));
 	lbArray = arrayfun(lbFun, snrArray, repmat(mVal, 1, length(snrArray)));
-	ubArray = arrayfun(ubFun, snrArray, repmat(mVal, 1, length(snrArray)));
+	ubArray = arrayfun(ubFun, snrArray, repmat(mVal, 1, length(snrArray)));1
 end
