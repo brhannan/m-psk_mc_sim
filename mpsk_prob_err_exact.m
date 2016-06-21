@@ -40,11 +40,11 @@ function pm = calculate_err_prob(z, mVal, N0)
 
 	% Set integration limits. Let x be r0 and y be r1. 
 	xmin = 0;
-	xmax = 1e3; % Approximate the infinite integral with a large constant.
+	xmax = inf;
 	ymin = 0;
-	if mVal == 2 % Why can't integral2 handle the singularity at tan(pi/2)?
+	if mVal == 2
 		yMaxFcn = @(x) x * 1e4; % Set upper limit to a large constant to
-	else 						% avoid the "singularity problem".
+	else 						% avoid the "singularity problem" at tan(pi/2).
 		yMaxFcn = @(x) x * tan(pi/mVal);
 	end
 	intgdFcn = @(x, y) (2/(pi*N0^2)) * ...
@@ -68,5 +68,5 @@ function [lbArray, ubArray] = calculate_bounds_m(snrArray, mVal)
 	lbFun = @(z,mVal) myQfun(sqrt( 2 * z * log2(mVal) * (sin(pi/mVal))^2 ));
 	ubFun = @(z,mVal) 2 * myQfun(sqrt( 2 * z * log2(mVal) * (sin(pi/mVal))^2 ));
 	lbArray = arrayfun(lbFun, snrArray, repmat(mVal, 1, length(snrArray)));
-	ubArray = arrayfun(ubFun, snrArray, repmat(mVal, 1, length(snrArray)));1
+	ubArray = arrayfun(ubFun, snrArray, repmat(mVal, 1, length(snrArray)));
 end

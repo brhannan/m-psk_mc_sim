@@ -40,11 +40,9 @@ function plot_mpsk_data(Data, MCSim);
 		hxl = xlabel('$E_B/N_0$ (dB)');
 		hyl = ylabel('Probability of symbol error $P_e$');
 		set([hxl, hyl], 'interpreter', 'latex', 'FontSize', 22);
-		% set(hleg, 'fontsize', 14);
-		% set(h_vec, 'LineWidth', 3);
 		set(gca, 'FontSize', 14);
 		grid on;
-		xlim([0 9.5]);
+		xlim([0 12]);
 end
 
 
@@ -70,7 +68,7 @@ function h_curve = draw_exact_curve(x, y, h_axes, varargin)
 end
 
 function h_curve = draw_mc(x, y, h_axes, varargin)
-	% Plot Monte carlo data.
+	% Plot Monte Carlo data.
 	% Inputs
 	%	x, y - Input data.
 	%	h_axes - Handle to the axes object.

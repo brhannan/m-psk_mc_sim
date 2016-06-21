@@ -1,6 +1,9 @@
-function MpskMcStruct = mcsim_mpsk(varargin)
+function MpskMcStruct = mcsim_mpsk(bitEnergyArray, M_array, N0, varargin)
 	% Run a Monte Carlo simulation to calculate M-PSK bit error rates.
 	% Inputs:
+	% 	bitEnergyArray - Array of Eb/N0 values.
+	%	M_array - array of M values for the M-PSK system.
+	%	N0 - N_0 value =1, included for completeness.
 	%	symbolErrThresh - Optional input. Calculate symbol error probability 
 	%		after this many symbol errors have occurred. Default value is 100.
 	% Output:
@@ -20,10 +23,6 @@ function MpskMcStruct = mcsim_mpsk(varargin)
 	optArgs(1:numVarArgs) = varargin;
 	symbolErrThresh = optArgs{:};
 
-	N0 = 1; % N0=1 is included in the calculations below for clarity.
-	bitEnergyArray = 1:0.5:10;
-	M_array = [2 4 8 16];
-
 	MpskMcStruct = struct();
 	MpskMcStruct.bitEnergyVals = bitEnergyArray;
 	for k = 1:numel(M_array)
@@ -32,7 +31,7 @@ function MpskMcStruct = mcsim_mpsk(varargin)
 		MpskMcStruct.(sprintf('M%d',M_now)) = sim_m_psk(M_now, bitEnergyArray, ...
 			symbolErrThresh, N0);
 	end
-	save('mpsk_mc.mat');
+	% save('mpsk_mc.mat');
 end
 
 
@@ -46,7 +45,7 @@ function probErrArray = sim_m_psk(M, ebArray, errorThresh, N0)
 	% 	N0 - Eb/N0 gives the SNR.
 	% Outputs:
 	%	probErrArray - Error prob. for each value of ebArray.
-	MAX_LOOP_COUNT = 1e9;
+	MAX_LOOP_COUNT = 1e8;
 	dTheta = pi/M; 	% The angle that defines the decision region boundary.
 	make_noise = @() normrnd(0, sqrt(N0/2)); % Gauss. noise. Mean 0. Var N0/2.
 	probErrArray = zeros(size(ebArray));
