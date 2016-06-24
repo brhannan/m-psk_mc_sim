@@ -7,4 +7,4 @@ Phase-shift keying (PSK) is a means of encoding information on a carrier wave by
 
 MC simulation results are plotted with "o" markers. Exact results are shown by the solid lines. Upper/lower bounds are shown by the gray patches.
 
-For more info, see the included PDF.
+For more info, see the file *MPSK_MC_summary.pdf*.
