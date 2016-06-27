@@ -31,7 +31,6 @@ function MpskMcStruct = mcsim_mpsk(bitEnergyArray, M_array, N0, varargin)
 		MpskMcStruct.(sprintf('M%d',M_now)) = sim_m_psk(M_now, bitEnergyArray, ...
 			symbolErrThresh, N0);
 	end
-	% save('mpsk_mc.mat');
 end
 
 
@@ -93,7 +92,6 @@ function isSymbolError = check_symbol_error(r1recd, r2recd, deltaTheta)
 	%	isSymbolError - True if received symbol is outside the decision region.
 	u = [1 0 0];
 	v = [r1recd r2recd 0];
-	assignin('base','u',u); assignin('base','v',v);
 	theta = atan2( norm(cross(u,v)), dot(u,v) );
 	isSymbolError = abs(theta) > deltaTheta;
 end
